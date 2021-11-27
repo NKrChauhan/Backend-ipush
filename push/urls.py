@@ -4,6 +4,6 @@ from .views import subscribe_client
 
 app_name = 'push'
 
-urlpatterns = {
-    path('subscribe/', subscribe_client, name="subscribe"),
-}
+urlpatterns = [
+    path('subscribe', subscribe_client, name="subscribe"),
+]

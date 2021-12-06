@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import Subscriptions
+from .models import Subscription
 
 
-class SubscriptionsSerializer(serializers.ModelSerializer):
+class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Subscriptions
+        model = Subscription
         fields = ['endpoint', 'auth_key', 'public_key', 'subscribe_time']

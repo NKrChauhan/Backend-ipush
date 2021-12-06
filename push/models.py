@@ -2,7 +2,7 @@ from django.db import models
 
 
 # Create your models here.
-class Subscriptions(models.Model):
+class Subscription(models.Model):
     endpoint = models.URLField(max_length=200, blank=False, null=False, unique=True)
     public_key = models.CharField(max_length=200, blank=False, null=False)
     auth = models.CharField(max_length=200, blank=False, null=False)

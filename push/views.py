@@ -1,8 +1,9 @@
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.permissions import AllowAny
-from django.http import JsonResponse
+from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
-from .serializers import SubscriptionsSerializer
+from rest_framework import status
+from .serializers import SubscriptionSerializer
 
 
 def rearrange_subscription_data(subscription_data) -> dict:
@@ -18,8 +19,8 @@ def rearrange_subscription_data(subscription_data) -> dict:
 @permission_classes([AllowAny])
 def subscribe_client(request, *args, **kwargs):
     subscription_data = rearrange_subscription_data(request.data)
-    subscription_object = SubscriptionsSerializer(data=subscription_data)
-    if subscription_object.is_valid():
-        subscription_object.save()
-        return JsonResponse({"response": subscription_object.data})
-    return JsonResponse({"response": "Invalid Data"})
+    subscription_serializer = SubscriptionSerializer(data=subscription_data)
+    if subscription_serializer.is_valid():
+        subscription_serializer.save()
+        return Response({"response": subscription_serializer.data}, status=status.HTTP_200_OK)
+    return Response({"response": "Invalid Data"}, status=status.HTTP_200_OK)

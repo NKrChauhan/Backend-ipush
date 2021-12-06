@@ -1,16 +1,16 @@
 from django.contrib import admin
-from .models import Subscriptions, Notifications
+from .models import Subscription, Notification
 
 
 class NotificationSentTime(admin.ModelAdmin):
-    readonly_fields = ('notification_sent_time',)
+    readonly_fields = ('sent_time',)
 
 
-admin.site.register(Notifications,NotificationSentTime)
+admin.site.register(Notification,NotificationSentTime)
 
 
 class SubscriptionTime(admin.ModelAdmin):
     readonly_fields = ('subscribe_time',)
 
 
-admin.site.register(Subscriptions,SubscriptionTime)
+admin.site.register(Subscription,SubscriptionTime)

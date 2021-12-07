@@ -6,6 +6,7 @@ class Subscription(models.Model):
     public_key = models.CharField(max_length=200, blank=False, null=False)
     auth_key = models.CharField(max_length=200, blank=False, null=False)
     subscribe_time = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return str(self.endpoint)

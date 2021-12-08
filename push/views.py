@@ -28,5 +28,5 @@ def send_notification(request, *args, **kwargs):
         notification_serializer.save()
         for active_subscription in active_subscriptions:
             send_web_push(subscription_object=active_subscription, notification_data=notification_serializer.validated_data)
-        return Response({"response": notification_serializer.data}, status=status.HTTP_201_CREATED)
+        return Response({"response": notification_serializer.data, "status": "Completed"}, status=status.HTTP_201_CREATED)
     return Response({"response": "Invalid Data", "error": notification_serializer.errors}, status=status.HTTP_200_OK)

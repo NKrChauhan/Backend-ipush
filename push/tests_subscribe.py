@@ -5,7 +5,8 @@ import json
 
 
 class SubscriptionApiTest(APITestCase):
-    url = reverse('push:subscribe')
+    def setUp(self):
+        self.url = reverse('push:subscribe')
 
     def test_subscribe_client_api_with_valid_data(self):
         valid_subscriber_request_data = {"endpoint": "https://some.pushservice.com/something-unique2121000",
@@ -23,30 +24,6 @@ class SubscriptionApiTest(APITestCase):
                                            "auth_key": "FPssNDTKnInHVndSTdbKFw=="
                                         }
         response_with_invalid_data = self.client.post(path=self.url, data=invalid_subscriber_request_data,format='json')
-        response_with_invalid_data_body = json.loads(response_with_invalid_data.content)
-        self.assertEqual(response_with_invalid_data.status_code, status.HTTP_200_OK)
-        self.assertEqual(response_with_invalid_data_body['response'], 'Invalid Data')
-
-
-class SendNotificationApiTest(APITestCase):
-    url = reverse('push:send_notification')
-
-    def test_send_notification_api_with_valid_notification_information(self):
-        valid_notification_request_data = {"title": "SALE SALE!",
-                                           "message": "OMG so good to have discounts",
-                                           "action_link": "https://www.google.com"
-                                           }
-        response_with_valid_data = self.client.post(path=self.url, data=valid_notification_request_data, format='json')
-        response_with_valid_data_body = json.loads(response_with_valid_data.content)
-        self.assertEqual(response_with_valid_data.status_code, status.HTTP_201_CREATED)
-        self.assertNotEqual(response_with_valid_data_body['response'], 'Invalid Data')
-
-    def test_send_notification_api_with_invalid_notification_information(self):
-        valid_notification_request_data = {"title": "SALE SALE!",
-                                           "message": "OMG so good to have discounts",
-                                           "action_link": "www.google.com"
-                                           }
-        response_with_invalid_data = self.client.post(path=self.url, data=valid_notification_request_data, format='json')
         response_with_invalid_data_body = json.loads(response_with_invalid_data.content)
         self.assertEqual(response_with_invalid_data.status_code, status.HTTP_200_OK)
         self.assertEqual(response_with_invalid_data_body['response'], 'Invalid Data')

@@ -2,6 +2,9 @@ from django.db import models
 
 
 class Subscription(models.Model):
+    """
+    is_active: flag which determine if the subscription is still receiving the notifications and still subscribed
+    """
     endpoint = models.URLField(max_length=500, blank=False, null=False, unique=True)
     public_key = models.CharField(max_length=200, blank=False, null=False)
     auth_key = models.CharField(max_length=200, blank=False, null=False)

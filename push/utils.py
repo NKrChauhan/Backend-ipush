@@ -1,5 +1,4 @@
 import json
-import base64
 from pywebpush import webpush, WebPushException
 from pushNotification.settings import PRIVATE_KEY
 

@@ -33,4 +33,4 @@ class Notification(models.Model):
     status = models.CharField(choices=NOTIFICATION_STATUS_CHOICE, max_length=120, default='In Progress')
 
     def __str__(self):
-        return f"{self.title} || {self.message}"
+        return f"{self.id} {self.title} || {self.message}"

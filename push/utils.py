@@ -19,6 +19,9 @@ def send_web_push(subscription_object, notification_data):
             }
         )
     except WebPushException as ex:
+        if ex.response.status_code == 410:
+            subscription_object.is_active = False
+            subscription_object.save()
         print(f"I'm sorry can't do that: {repr(ex)}")
         if ex.response and ex.response.json():
             extra = ex.response.json()

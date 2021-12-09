@@ -32,7 +32,7 @@ def send_notification(request, *args, **kwargs):
     return Response({"response": "Invalid Data", "error": notification_serializer.errors}, status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 @permission_classes([AllowAny])
 def fetch_notification_status(request, notification_id=None, *args, **kwargs):
     notification_obj = Notification.objects.filter(id=notification_id)

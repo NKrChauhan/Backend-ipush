@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 from rest_framework import status
 from .serializers import SubscriptionSerializer, NotificationSerializer
-from .models import Subscription, Notification
+from .models import Subscription
 from .utils import send_web_push, get_notification_by_id
 
 

@@ -1,7 +1,7 @@
 from celery.utils.log import get_task_logger
-from push.services.get_active_subscriptions import GetActiveSubscriptions
-from push.services.send_webpush import SendWebPush
-from push.services.get_notification import GetNotification
+from push.services.SubscriptionService import SubscriptionService
+from push.services.SendWebPushService import SendWebPushService
+from push.services.NotificationService import NotificationService
 from push.models.notification import COMPLETED, FAILED
 from celery import shared_task
 
@@ -10,17 +10,18 @@ logger = get_task_logger(__name__)
 
 @shared_task
 def task_send_web_push(notification_id):
-    active_subscriptions = GetActiveSubscriptions.get_active_subscription()
-    notification_object = GetNotification.get_notification_by_id(notification_id=notification_id)
+    send_web_push = SendWebPushService(notification_id=notification_id)
+    active_subscriptions = SubscriptionService.get_active_subscription()
     try:
-        SendWebPush(
-            subscription_objects=active_subscriptions,
-            notification_data=notification_object
-        ).send_web_push_to_all_subscribers()
-        notification_object.status = COMPLETED
+        for subscription in active_subscriptions:
+            send_web_push.send_web_push(
+                endpoint=subscription.endpoint,
+                public_key=subscription.public_key,
+                auth_key=subscription.auth_key,
+            )
+        NotificationService.set_notification_status(notification_id=notification_id, status=COMPLETED)
     except Exception as e:
         logger.info(e)
-        notification_object.status = FAILED
+        NotificationService.set_notification_status(notification_id=notification_id, status=FAILED)
     finally:
-        logger.info(f"{notification_object.id} || {notification_object.status}")
-        notification_object.save()
+        logger.info(f"{notification_id} processed ")

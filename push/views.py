@@ -1,16 +1,11 @@
-import json
-
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from push.serializers.notification_serializer import NotificationSerializer
 from push.serializers.subscription_serializer import SubscriptionSerializer
-from push.services.get_active_subscriptions import GetActiveSubscriptions
-from push.services.save_notification import SaveNotification
-from push.services.send_webpush import SendWebPush
-from push.services.get_notification import GetNotification
-from push.services.save_subscription import SaveSubscription
+from push.services.NotificationService import NotificationService
+from push.services.SubscriptionService import SubscriptionService
 from push.tasks import task_send_web_push
 
 
@@ -19,8 +14,10 @@ from push.tasks import task_send_web_push
 def subscribe_client(request, *args, **kwargs):
     subscription_serializer = SubscriptionSerializer(data=request.data)
     subscription_serializer.is_valid(raise_exception=True)
-    saved_subscription_serializer = SaveSubscription.save_subscription(
-        valid_subscription_data=subscription_serializer.validated_data
+    saved_subscription_serializer = SubscriptionService.save_subscription(
+        endpoint=subscription_serializer.validated_data['endpoint'],
+        auth_key=subscription_serializer.validated_data['auth_key'],
+        public_key=subscription_serializer.validated_data['public_key']
     )
     return Response({
         "response": saved_subscription_serializer.data
@@ -34,8 +31,10 @@ def subscribe_client(request, *args, **kwargs):
 def send_notification(request, *args, **kwargs):
     notification_serializer = NotificationSerializer(data=request.data)
     notification_serializer.is_valid(raise_exception=True)
-    saved_notification_serializer = SaveNotification.save_notification(
-        valid_notification_data=notification_serializer.validated_data
+    saved_notification_serializer = NotificationService.save_notification(
+        title=notification_serializer.validated_data['title'],
+        message=notification_serializer.validated_data['message'],
+        action_link=notification_serializer.validated_data['action_link']
     )
     task_send_web_push.delay(notification_id=saved_notification_serializer.data['id'])
     return Response({
@@ -48,7 +47,7 @@ def send_notification(request, *args, **kwargs):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def fetch_notification_status(request, notification_id=None, *args, **kwargs):
-    notification_obj = GetNotification.get_notification_by_id(notification_id=notification_id)
+    notification_obj = NotificationService.get_notification_by_id(notification_id=notification_id)
     if notification_obj:
         return Response({
             "status": notification_obj.status

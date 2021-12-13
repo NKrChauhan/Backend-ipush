@@ -18,31 +18,31 @@ from push.tasks import task_send_web_push
 @permission_classes([AllowAny])
 def subscribe_client(request, *args, **kwargs):
     subscription_serializer = SubscriptionSerializer(data=request.data)
-    if subscription_serializer.is_valid(raise_exception=True):
-        saved_subscription_serializer = SaveSubscription.save_subscription(
-            valid_subscription_data=subscription_serializer.validated_data
-        )
-        return Response({
-            "response": saved_subscription_serializer.data
-        },
-            status=status.HTTP_201_CREATED
-        )
+    subscription_serializer.is_valid(raise_exception=True)
+    saved_subscription_serializer = SaveSubscription.save_subscription(
+        valid_subscription_data=subscription_serializer.validated_data
+    )
+    return Response({
+        "response": saved_subscription_serializer.data
+    },
+        status=status.HTTP_201_CREATED
+    )
 
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def send_notification(request, *args, **kwargs):
     notification_serializer = NotificationSerializer(data=request.data)
-    if notification_serializer.is_valid(raise_exception=True):
-        saved_notification_serializer = SaveNotification.save_notification(
-            valid_notification_data=notification_serializer.validated_data
-        )
-        task_send_web_push.delay(notification_id=saved_notification_serializer.data['id'])
-        return Response({
-            "response": saved_notification_serializer.data
-        },
-            status=status.HTTP_201_CREATED
-        )
+    notification_serializer.is_valid(raise_exception=True)
+    saved_notification_serializer = SaveNotification.save_notification(
+        valid_notification_data=notification_serializer.validated_data
+    )
+    task_send_web_push.delay(notification_id=saved_notification_serializer.data['id'])
+    return Response({
+        "response": saved_notification_serializer.data
+    },
+        status=status.HTTP_201_CREATED
+    )
 
 
 @api_view(['GET'])

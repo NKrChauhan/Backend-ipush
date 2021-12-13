@@ -1,5 +1,5 @@
 from push.models import Notification
-from push.serializers.notification_serializer import NotificationSerializer
+from push.models.notification import COMPLETED, FAILED
 
 
 class NotificationService:
@@ -10,15 +10,27 @@ class NotificationService:
             message=message,
             action_link=action_link
         )
-        saved_notification_serializer = NotificationSerializer(notification_object)
-        return saved_notification_serializer
+        return notification_object
 
     @staticmethod
     def get_notification_by_id(notification_id):
         return Notification.objects.filter(id=notification_id).first()
 
     @staticmethod
-    def set_notification_status(notification_id, status):
+    def set_notification_status_complete(notification_id):
         notification_object = Notification.objects.filter(id=notification_id).first()
-        notification_object.status = status
+        notification_object.status = COMPLETED
         notification_object.save()
+
+    @staticmethod
+    def set_notification_status_failed(notification_id):
+        notification_object = Notification.objects.filter(id=notification_id).first()
+        notification_object.status = FAILED
+        notification_object.save()
+
+    @staticmethod
+    def get_notification_status(notification_id):
+        notification_object = Notification.objects.filter(id=notification_id).first()
+        if notification_object:
+            return notification_object.status
+        return None

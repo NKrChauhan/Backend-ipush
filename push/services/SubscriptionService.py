@@ -1,12 +1,4 @@
 from push.models import Subscription
-from push.serializers.subscription_serializer import SubscriptionSerializer
-
-BAD_AUTHORIZATION_CODE = 410
-NOT_FOUND = 410
-SUBSCRIPTION_INACTIVE_ERROR_CODES = [
-    BAD_AUTHORIZATION_CODE,
-    NOT_FOUND
-]
 
 
 class SubscriptionService:
@@ -21,12 +13,9 @@ class SubscriptionService:
             auth_key=auth_key,
             public_key=public_key
         )
-        saved_subscription_serializer = SubscriptionSerializer(instance=subscription_object)
-        return saved_subscription_serializer
+        return subscription_object
 
     @staticmethod
-    def set_subscription_inactive(response_code, subscription_endpoint):
-        subscription_object = Subscription.objects.filter(endpoint=subscription_endpoint).first()
-        if response_code in SUBSCRIPTION_INACTIVE_ERROR_CODES:
-            # subscription_object.is_active = False
-            subscription_object.save()
+    def set_subscription_inactive(subscription_object):
+        subscription_object.is_active = False
+        subscription_object.save()

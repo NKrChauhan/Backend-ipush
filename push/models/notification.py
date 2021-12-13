@@ -15,8 +15,12 @@ class Notification(models.Model):
     message = models.CharField(max_length=500, blank=False, null=False)
     action_link = models.URLField(blank=True, null=True)
     sent_time = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(choices=NOTIFICATION_STATUS_CHOICE, max_length=120, default=IN_PROGRESS,
-                              help_text="Current status of the send notification task")
+    status = models.CharField(
+        choices=NOTIFICATION_STATUS_CHOICE,
+        max_length=120,
+        default=IN_PROGRESS,
+        help_text="Current status of the send notification task"
+    )
 
     def __str__(self):
         return f"{self.id} {self.title} || {self.message}"

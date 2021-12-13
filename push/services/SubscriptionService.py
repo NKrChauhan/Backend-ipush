@@ -19,3 +19,19 @@ class SubscriptionService:
     def set_subscription_inactive(subscription_object):
         subscription_object.is_active = False
         subscription_object.save()
+
+    @staticmethod
+    def update_subscription(subscription_endpoint, auth_key, public_key):
+        subscription_object = Subscription.objects.filter(
+            endpoint=subscription_endpoint
+        ).first()
+        subscription_object.auth_key = auth_key
+        subscription_object.public_key = public_key
+        subscription_object.is_active = True
+        subscription_object.save()
+
+    @staticmethod
+    def is_inactive(endpoint):
+        if len(Subscription.objects.filter(is_active=False).filter(endpoint=endpoint)) > 0:
+            return True
+        return False

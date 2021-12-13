@@ -32,5 +32,5 @@ class SubscriptionApiTest(APITestCase):
             data=invalid_subscriber_request_data,
             format='json'
         )
-        self.assertEqual(response_with_invalid_data.status_code, status.HTTP_200_OK)
-        self.assertEqual(response_with_invalid_data.data['response'], 'Invalid Data')
+        self.assertEqual(response_with_invalid_data.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response_with_invalid_data.data['endpoint'][0], 'Enter a valid URL.')

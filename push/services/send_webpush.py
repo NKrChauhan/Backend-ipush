@@ -13,7 +13,7 @@ class SendWebPush:
         self.notification_data = notification_data
         self.subscription_objects = subscription_objects
 
-    def send_web_push_to_all(self):
+    def send_web_push_to_all_subscribers(self):
         for subscription_object in self.subscription_objects:
             try:
                 webpush(
@@ -42,5 +42,5 @@ class SendWebPush:
     @staticmethod
     def set_subscription_inactive(response_code, subscription_object):
         if response_code in SUBSCRIPTION_INACTIVE_ERROR_CODES:
-            subscription_object.is_active = False
+            # subscription_object.is_active = False
             subscription_object.save()

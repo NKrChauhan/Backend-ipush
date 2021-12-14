@@ -44,3 +44,10 @@ AttributeError: 'SubscriptionSerializer' object has no attribute 'initial_data'
 Not Found: /api/fetch_notification_status/1
 Bad Request: /api/send_notification
 Bad Request: /api/subscribe
+Bad Request: /api/subscribe
+"POST /api/subscribe HTTP/1.1" 400 64
+Bad Request: /api/subscribe
+"POST /api/subscribe HTTP/1.1" 400 64
+Not Found: /api/fetch_notification_status/1
+Bad Request: /api/send_notification
+Bad Request: /api/subscribe

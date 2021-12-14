@@ -88,3 +88,18 @@ Watching for file changes with StatReloader
 Not Found: /api/fetch_notification_status/1
 Bad Request: /api/send_notification
 Bad Request: /api/subscribe
+"GET /admin/push/subscription/ HTTP/1.1" 200 9190
+"GET /admin/jsi18n/ HTTP/1.1" 200 3195
+Watching for file changes with StatReloader
+"OPTIONS /api/subscribe HTTP/1.1" 200 0
+Bad Request: /api/subscribe
+"POST /api/subscribe HTTP/1.1" 400 64
+"GET /admin/push/notification/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/push/notification/ HTTP/1.1" 200 2250
+"GET /static/admin/css/login.css HTTP/1.1" 200 939
+"OPTIONS /api/subscribe HTTP/1.1" 200 0
+Bad Request: /api/subscribe
+"POST /api/subscribe HTTP/1.1" 400 64
+Not Found: /api/fetch_notification_status/1
+Bad Request: /api/send_notification
+Bad Request: /api/subscribe

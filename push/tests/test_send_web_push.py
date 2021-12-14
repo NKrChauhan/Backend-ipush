@@ -23,10 +23,9 @@ class SendWebPushServiceTest(TestCase):
         )
         self.notification_id = self.notification_object.id
 
-    @patch('push.services.SendWebPushService.SendWebPushService.send_web_push',
-           side_effect=[WebPushException(message="", response=exc_response)])
+    @patch('push.services.SendWebPushService.SendWebPushService.send_web_push')
     def test_send_web_push(self, mock_webpush):
-        with self.assertRaises(WebPushException):
-            SendWebPushService(
-                notification_id=self.notification_id,
-            ).send_web_push(subscription_object=self.subscription_object)
+        SendWebPushService(
+            notification_id=self.notification_id,
+        ).send_web_push(subscription_object=self.subscription_object)
+        mock_webpush.assert_called_once()

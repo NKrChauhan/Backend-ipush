@@ -13,18 +13,31 @@ from push.tasks import task_send_web_push
 @permission_classes([AllowAny])
 def subscribe_client(request, *args, **kwargs):
     subscription_serializer = SubscriptionSerializer(data=request.data)
-    subscription_serializer.is_valid(raise_exception=True)
-    saved_subscription_object = SubscriptionService.save_subscription(
-        endpoint=subscription_serializer.validated_data['endpoint'],
-        auth_key=subscription_serializer.validated_data['auth_key'],
-        public_key=subscription_serializer.validated_data['public_key']
-    )
-    saved_subscription_serializer = SubscriptionSerializer(saved_subscription_object)
-    return Response({
-        "response": saved_subscription_serializer.data
-    },
-        status=status.HTTP_201_CREATED
-    )
+    if SubscriptionService.is_inactive(endpoint=subscription_serializer.initial_data['endpoint']):
+        updated_subscription_object = SubscriptionService.update_subscription(
+            subscription_endpoint=subscription_serializer.initial_data['endpoint'],
+            auth_key=subscription_serializer.initial_data['auth_key'],
+            public_key=subscription_serializer.initial_data['public_key']
+        )
+        updated_subscription_serializer = SubscriptionSerializer(instance=updated_subscription_object)
+        return Response({
+            "response": updated_subscription_serializer.data,
+        },
+            status=status.HTTP_200_OK
+        )
+    else:
+        subscription_serializer.is_valid(raise_exception=True)
+        saved_subscription_object = SubscriptionService.save_subscription(
+            endpoint=subscription_serializer.validated_data['endpoint'],
+            auth_key=subscription_serializer.validated_data['auth_key'],
+            public_key=subscription_serializer.validated_data['public_key']
+        )
+        saved_subscription_serializer = SubscriptionSerializer(saved_subscription_object)
+        return Response({
+            "response": saved_subscription_serializer.data
+        },
+            status=status.HTTP_201_CREATED
+        )
 
 
 @api_view(['POST'])

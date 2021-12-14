@@ -18,7 +18,6 @@ logger.addHandler(logging.StreamHandler(sys.stdout))
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def subscribe_client(request, *args, **kwargs):
-    logger.info('Subscription is coming oooooooooooo...onboard')
     subscription_serializer = SubscriptionSerializer(data=request.data)
     subscription_serializer.is_valid(raise_exception=True)
     saved_subscription_object = SubscriptionService.save_subscription(
@@ -38,7 +37,6 @@ def subscribe_client(request, *args, **kwargs):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def send_notification(request, *args, **kwargs):
-    logger.info('Sending Notification Has Been Initiated, Be ready RabbitMQ bros...')
     notification_serializer = NotificationSerializer(data=request.data)
     notification_serializer.is_valid(raise_exception=True)
     saved_notification_object = NotificationService.save_notification(
@@ -49,7 +47,6 @@ def send_notification(request, *args, **kwargs):
     saved_notification_serializer = NotificationSerializer(saved_notification_object)
     logger.info('RabbitMQ enqueued task created for CELERY:')
     task_send_web_push.delay(notification_id=saved_notification_serializer.data['id'])
-    logger.info('CELERY task under processing...')
     return Response({
         "response": saved_notification_serializer.data
     },
@@ -60,7 +57,6 @@ def send_notification(request, *args, **kwargs):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def fetch_notification_status(request, notification_id=None, *args, **kwargs):
-    logger.info('Fetch Notification Status API called')
     notification_status = NotificationService.get_notification_status(notification_id=notification_id)
     if notification_status:
         return Response({

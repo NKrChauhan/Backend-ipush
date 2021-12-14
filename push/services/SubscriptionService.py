@@ -29,9 +29,8 @@ class SubscriptionService:
         subscription_object.public_key = public_key
         subscription_object.is_active = True
         subscription_object.save()
+        return subscription_object
 
     @staticmethod
     def is_inactive(endpoint):
-        if len(Subscription.objects.filter(is_active=False).filter(endpoint=endpoint)) > 0:
-            return True
-        return False
+        return Subscription.objects.filter(is_active=False, endpoint=endpoint).exists()

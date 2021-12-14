@@ -14,13 +14,14 @@ from push.tasks import task_send_web_push
 def subscribe_client(request, *args, **kwargs):
     subscription_serializer = SubscriptionSerializer(data=request.data)
     if SubscriptionService.is_inactive(endpoint=subscription_serializer.initial_data['endpoint']):
-        SubscriptionService.update_subscription(
+        updated_subscription_object = SubscriptionService.update_subscription(
             subscription_endpoint=subscription_serializer.initial_data['endpoint'],
             auth_key=subscription_serializer.initial_data['auth_key'],
             public_key=subscription_serializer.initial_data['public_key']
         )
+        updated_subscription_serializer = SubscriptionSerializer(instance=updated_subscription_object)
         return Response({
-            "response": subscription_serializer.initial_data,
+            "response": updated_subscription_serializer.data,
         },
             status=status.HTTP_200_OK
         )

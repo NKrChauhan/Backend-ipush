@@ -52,7 +52,7 @@ class SubscriptionApiTest(APITestCase):
             data=valid_subscriber_request_data,
             format='json'
         )
-        self.subscription_object = Subscription.objects.get(endpoint="https://some.pushservice.com/")
+        self.subscription_object.refresh_from_db()
         self.assertEqual(response_with_valid_data.status_code, status.HTTP_200_OK)
         self.assertEqual(self.subscription_object.auth_key, "FPssNDTKnInHVndSTdbKFw==Tw")
         self.assertEqual(self.subscription_object.is_active, True)

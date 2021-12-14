@@ -7,6 +7,12 @@ from push.serializers.subscription_serializer import SubscriptionSerializer
 from push.services.NotificationService import NotificationService
 from push.services.SubscriptionService import SubscriptionService
 from push.tasks import task_send_web_push
+import logging
+import sys
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+logger.addHandler(logging.StreamHandler(sys.stdout))
 
 
 @api_view(['POST'])
@@ -19,6 +25,7 @@ def subscribe_client(request, *args, **kwargs):
         auth_key=subscription_serializer.validated_data['auth_key'],
         public_key=subscription_serializer.validated_data['public_key']
     )
+    logger.info('Created Subscription... Congrats')
     saved_subscription_serializer = SubscriptionSerializer(saved_subscription_object)
     return Response({
         "response": saved_subscription_serializer.data
@@ -38,6 +45,7 @@ def send_notification(request, *args, **kwargs):
         action_link=notification_serializer.validated_data['action_link']
     )
     saved_notification_serializer = NotificationSerializer(saved_notification_object)
+    logger.info('RabbitMQ enqueued task created for CELERY:')
     task_send_web_push.delay(notification_id=saved_notification_serializer.data['id'])
     return Response({
         "response": saved_notification_serializer.data

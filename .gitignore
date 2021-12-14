@@ -2,3 +2,4 @@
 ./push/migrations
 ./push/__pycache__
 *.pyc
+./logs
